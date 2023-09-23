@@ -46,26 +46,48 @@ def frequency(string):
     return freq
 
 
+def stat_dist(freq):
+    stat_dist = 0
+    sum = 0
+    for v1, v2 in zip(frequency_english.values(), freq.values()):
+        sum += abs(v1 - v2)
+
+    stat_dist = round(sum / 2, 1)
+    return stat_dist
+
+
 # given a ciphertext string and key, returns the plaintext
-def viegenere_cipher(string):
-    print("hi")
+def vigenere_cipher(string):
+    string = string.replace(" ", "")
+    min_key = 2
+    max_key = 10
+    keys_sd = dict()
+    possible_keylengths = dict()
+
+    print(string)
+    for k in range(26):
+        print("for k=" + str(k))
+        for n in range(min_key, max_key):
+            nth_chars = string[::n]
+            freq = frequency(nth_chars)
+            sd = stat_dist(freq)
+            keys_sd[n] = sd
+        string = decrypt_shift(string, 1)
+
+        print(keys_sd)
+        print(str(sum(keys_sd.values()) / len(keys_sd)) + "\n")
 
 
 # given a ciphertext string, computes the key using statistical distance and prints plaintext
 def shift_cipher(string):
-    stat_dist = dict()
+    stat_dist_dict = dict()
     ciphertext = string
 
     for k in range(26):
-        sum = 0
         freq = frequency(string)
-
-        for v1, v2 in zip(frequency_english.values(), freq.values()):
-            sum += abs(v1 - v2)
-
-        stat_dist[k] = round(sum / 2, 1)
+        stat_dist_dict[k] = stat_dist(freq)
         string = decrypt_shift(string, 1)
-    key = min(stat_dist.items(), key=lambda x: x[1])[0]
+    key = min(stat_dist_dict.items(), key=lambda x: x[1])[0]
     print("Ciphertext: " + ciphertext)
     print("Plaintext: " + decrypt_shift(ciphertext, key))
     print("Key: " + str(key))
@@ -84,7 +106,7 @@ def decrypt_shift(string, key):
 
 def main():
     shift_cipher(ciphertext_a)
-    viegenere_cipher(ciphertext_b)
+    vigenere_cipher(ciphertext_b)
 
 
 if __name__ == "__main__":
