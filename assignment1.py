@@ -1,7 +1,6 @@
 from collections import Counter
 from math import gcd, sqrt
 from collections import defaultdict
-from functools import reduce
 
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 
